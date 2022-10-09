@@ -1,108 +1,61 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Сравнение документов</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    </head>
-    <body>
-    <!-- List of uploaded documents -->
-    {% if documents %}
-        <ul>
-        {% for document in documents %}
-            <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No documents.</p>
-    {% endif %}
+  <title>Сравнение документов</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  
+  <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
 
-        <!-- Upload form. Note enctype attribute! -->
-        <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <p>{{ form.non_field_errors }}</p>
-            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-            <p>
-                {{ form.docfile.errors }}
-                {{ form.docfile }}
-            </p>
+  <link rel="stylesheet" href="../static/css/demo.css">
+  <script src="https://kit.fontawesome.com/a3229bc6db.js" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="../static/js/modernizr.custom.86080.js"></script>
 
-            <label class="form-label" for="customFile"></label>
-            <input type="submit" class="form-control" id="customFile" />
-            <p><input type="submit" value="Загрузить" /></p>
-        </form>
-    </body>
+	</head>
+	<body>
+        <div id="../static/js/particles.js"></div>
+			<div class="container-fluid justify-content-center align-items-center">
+				<div class="d-flex justify-content-between cb-slideshow-text-container ">
+                    <div class="documents_container col-md-5">
+                        
+                            <div><i class="fa-solid fa-file"></i>Название документа</div>
+                            <div><i class="fa-solid fa-file"></i>Название документа</div>
+                            <div><i class="fa-solid fa-file"></i>Название документа</div>
+                            <div><i class="fa-solid fa-file"></i>Название документа</div>
+
+                    </div>
+					<div class= "tm-content col-md-7 col-xl-6 col-sm-8 col-xs-8 section">
+                    
+					<header class="mb-5"><h1>Сравнение документов</h1></header>
+					<P class="mb-5">Данный сервис позволит вам произвести сравнение двух загруженных документов! Он покажет вам статистику изменений! Подсветит изменения по важности!</P>
+                    <form action="#" method="get" class="subscribe-form">
+            
+                    <form action="./" method="post" enctype="multipart/form-data"> 
+                        <label for="customFile">Выберите файл</label>
+                        <input type="submit" id="customFile" class="btn btn-secondary" value="Загрузить"/>
+                    </form> 				
+                        <div> 
+                            <p>errors</p>
+                    <p>label help text</p>
+                        </div>
+                    </form>
+
+					<div class="tm-social-icons-container text-xs-center">
+	                    <a href="#" class="tm-social-link"><i class="fa fa-google-plus"></i></a>
+	                    <a href="#" class="tm-social-link"><i class="fa fa-github"></i></a>
+	                </div>
+					</div>
+				</div>
+				<div class="footer-link">
+					<p>Copyright © 2022 Выйти из дампа
+				</div>
+			</div>
+
+	</body>
+
+	<script type="text/javascript" src="../static/js/particles.js"></script>
+	<script type="text/javascript" src="../static/js/app.js"></script>
 </html>
-{#{% load static %}#}
-{#<!DOCTYPE html>#}
-{#<html>#}
-{#<head>#}
-{#  <meta charset="utf-8">#}
-{#  <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
-{#  <meta name="viewport" content="width=device-width, initial-scale=1">#}
-{##}
-{#  <title>Сравнение документов</title>#}
-{#  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->#}
-{#  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">#}
-{#  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">#}
-{##}
-{#  <link rel="stylesheet" href="{% static 'css/demo.css' %}" />#}
-{#  <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">#}
-{##}
-{#  <script type="text/javascript" src="{% static 'js/modernizr.custom.86080.js' %}"></script>#}
-{##}
-{#	</head>#}
-{##}
-{#	<body>#}
-{#        <div id="{% static 'js/particles.js' %}"></div>#}
-{#            {% if documents %}#}
-{#			<ul class="cb-slideshow">#}
-{#            {% for document in documents %}#}
-{#                <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>#}
-{#            {% endfor %}#}
-{#            </ul>#}
-{#            {% else %}#}
-{#                <p>No documents.</p>#}
-{#            {% endif %}#}
-{#	        </ul>#}
-{##}
-{#			<div class="container-fluid justify-content-center align-items-center">#}
-{#				<div class="row cb-slideshow-text-container ">#}
-{#					<div class= "tm-content col-xl-6 col-sm-8 col-xs-8 ml-auto section">#}
-{#					<header class="mb-5"><h1>Сравнение документов</h1></header>#}
-{#					<P class="mb-5">Данный сервис позволит вам произвести сравнение двух загруженных документов! Он покажет вам статистику изменений! Подсветит изменения по важности!</P>#}
-{#                    <form action="#" method="get" class="subscribe-form">#}
-{#               	    	<div class="row form-section">#}
-{##}
-{#			        <!-- Upload form. Note enctype attribute! -->#}
-{#                    <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">#}
-{#                        {% csrf_token %}#}
-{#                        <p>{{ form.non_field_errors }}</p>#}
-{#                        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>#}
-{#                        <p>#}
-{#                            {{ form.docfile.errors }}#}
-{#                            {{ form.docfile }}#}
-{#                        </p>#}
-{#                        <input type="submit" id="customFile" value="Загрузить"/>#}
-{#                    </form>#}
-{##}
-{#						</div>#}
-{#                    </form>#}
-{##}
-{#					<div class="tm-social-icons-container text-xs-center">#}
-{#	                    <a href="#" class="tm-social-link"><i class="fa fa-google-plus"></i></a>#}
-{#	                    <a href="#" class="tm-social-link"><i class="fa fa-github"></i></a>#}
-{#	                </div>#}
-{#					</div>#}
-{#				</div>#}
-{#				<div class="footer-link">#}
-{#					<p>Copyright © 2022 Выйти из дампа#}
-{#				</div>#}
-{#			</div>#}
-{##}
-{#	</body>#}
-{##}
-{#	<script type="text/javascript" src="{% static 'js/particles.js' %}"></script>#}
-{#	<script type="text/javascript" src="{% static 'js/app.js'  %}"></script>#}
-{#</html>#}
