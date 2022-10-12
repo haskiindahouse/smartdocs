@@ -322,7 +322,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         del_out["n_matches"] = False
         del_out["entities"] = ents['ents']
         del_out["importance"] = randint(1, 5)
-        d_finaly["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
+        del_out["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
         del_lst.append(del_out)
 
     d_finaly['deleted'] = del_lst
