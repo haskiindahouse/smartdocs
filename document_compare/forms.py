@@ -7,4 +7,3 @@ class DocumentForm(forms.Form):
         label='Выберите документ',
         help_text=''
     )
-

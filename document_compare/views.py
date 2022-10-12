@@ -15,10 +15,10 @@ def start(request):
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             newdoc = Document(docfile=request.FILES['docfile'])
-            if newdoc.check():
-                newdoc.save()
-    else:
+            newdoc.save()
+    if request.method == 'GET':
         form = DocumentForm()
+        message = "HELLO WORLD"
 
     documents = Document.objects.all()
 
