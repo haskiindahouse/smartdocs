@@ -313,13 +313,12 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         del_lst.append(del_out)
 
     d_finaly['deleted'] = del_lst
-
-
-    with open('markdown.json', 'w') as outfile:
-        json.dump(d_finaly, outfile, ensure_ascii=False)
-
-    with open('text1.json', 'w') as outfile:
-        json.dump(t1, outfile, ensure_ascii=False)
+    # with open('markdown.json', 'w') as outfile:
+    #     json.dump(d_finaly, outfile, ensure_ascii=False)
+    #
+    # with open('text1.json', 'w') as outfile:
+    #     json.dump(t1, outfile, ensure_ascii=False)
+    return d_finaly, t1
 
 
 if __name__ =='__main__':

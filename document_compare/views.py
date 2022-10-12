@@ -3,20 +3,33 @@ from .models import Document, Sentence
 from .forms import DocumentForm
 from text_analyzer.text_differ import get_all_text, get_match, get_minus_and_plus, get_json
 
+
 def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+
 def compare(request):
+    difference = ""
+    message = 'Upload as many files as you want!'
+
+    deleted_sentencies = ""
     if request.method == 'POST':
         t1 = get_all_text(request.POST.getlist("doc_check")[0])  # текст 1 путь к файлу (doc,docx,rtf) STRING
         t2 = get_all_text(request.POST.getlist("doc_check")[1])  # текст 2 путь к файлу (doc,docx,rtf) STRINGv
         d_eq, d_changed = get_match(t1, t2)  # словарь полных совпадений и изменений {text1_id: text2_id}
         deleted, added = get_minus_and_plus(t1, t2, d_eq, d_changed)  # удаленные из 1 текста и добавленные во 2 текст
-        get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
+        difference, deleted_sentencies = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
+        form = DocumentForm()
+
+    documents = Document.objects.all()
+    context = {'documents': documents, 'form': form, 'message': message, 'difference':difference, 'deleted_sentencies':deleted_sentencies}
+
+    return render(request, 'start.html', context)
 
 
 def start(request):
+    difference = ""
     message = 'Upload as many files as you want!'
     # Handle file upload
     if request.method == 'POST':
@@ -27,9 +40,9 @@ def start(request):
     if request.method == 'GET':
         form = DocumentForm()
 
-
     documents = Document.objects.all()
+    print(difference)
 
     # Сюда добавить сбор со сервера предложений по документу
-    context = {'documents': documents, 'form': form, 'message': message}
+    context = {'documents': documents, 'form': form, 'message': message, 'difference': difference, 'deleted_sentencies':""}
     return render(request, 'start.html', context)
