@@ -51,8 +51,8 @@ def compare(request):
 
         for change in sorted(changed, key=lambda x: x['importance'], reverse=True):
             diffs.append('<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown'].replace('\\', '').replace('\n', ''))
-            changed_entities.append([ '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown_ent_1'].replace('\\', '').replace('\n', ''),
-                                      '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown_ent_2'].replace('\\', '').replace('\n', '')])
+            changed_entities.append([ '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}][Было] ' + change['markdown_ent_1'].replace('\\', '').replace('\n', ''),
+                                      '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}][Стало] ' + change['markdown_ent_2'].replace('\\', '').replace('\n', '')])
 
         for diff in sorted(difference['deleted'], key=lambda x: x['importance'], reverse=True):
             deleted.append('<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[diff['importance']] + ';">&#8226;</span>   ' + f'[{diff["id"]}] ' +diff['markdown_ent'].replace('\\', '').replace('\n', ''))
