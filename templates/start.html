@@ -122,22 +122,68 @@
 
         <div class="col-lg-6 d-flex flex-column justify-content-center">
             <label for="exampleFormControlTextarea1">Исходный</label>
-        <div contenteditable="true" class="form-control"  style="height: 800px;" id="exampleFormControlTextarea1" rows="3">{{ firstDoc }}</div>
+        <div contenteditable="true" class="form-control"  style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">{{ firstDoc|safe }}</div>
     </div>
        <div class="col-lg-6 d-flex flex-column justify-content-center">
       <label for="exampleFormControlTextarea1">Новый</label>
-    <div contenteditable="true" class="form-control" style="height: 800px;" id="exampleFormControlTextarea1" rows="3">{{ secondDoc }}</div>
+    <div contenteditable="true" class="form-control" style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">{{ secondDoc|safe }}</div>
     </div>
       </div>
       </div>
 
     </section>
-    <section id="team" class="team">
+
+        <section id="team" class="team">
       <div class="container" data-aos="fade-up">
+           <div class="row">
+
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
             <label for="exampleFormControlTextarea1">Результат сравнения</label>
-        <textarea class="form-control" style="height: 800px;" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <div contenteditable="true" class="form-control"  style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">
+            {% if diffs %}
+            <center><h1>Изменения:</h1></center>
+                {% for diff in diffs %}
+                    {{ diff|safe }} <br/> <br/>
+                {% endfor %}
+            {% endif %}
+            {% if added %}
+            <center><h1>Добавлено:</h1></center>
+                {% for addition in added %}
+                {{ addition | safe }} <br/> <br/>
+
+                {% endfor %}
+            {% endif %}
+
+            {% if deleted %}
+             <center><h1>Удалено:</h1></center>
+                {% for deletion in deleted %}
+                {{ deletion | safe }}<br/> <br/>
+
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+       <div class="col-lg-6 d-flex flex-column justify-content-center">
+      <label for="exampleFormControlTextarea1">Изменения:</label>
+    <div contenteditable="true" class="form-control" style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">
+        {% if changed_entities %}
+            {% for en in changed_entities %}
+                {% for e in en %}
+                    {{ e|safe }}<br/>
+                    {% endfor %}
+                <br/>
+                <br/>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+    </div>
       </div>
+      </div>
+
     </section>
+
+
     <main id="main">
     <div class="container">
 {#    <div class="spinner-border" role="status">#}

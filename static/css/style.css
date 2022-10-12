@@ -17,6 +17,14 @@ body {
   color: #444444;
 }
 
+.entities {
+  display: inline;
+}
+
+.change_container div {
+  display: inline-block;
+}
+
 a {
   color: #4154f1;
   text-decoration: none;

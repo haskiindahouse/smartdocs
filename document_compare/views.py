@@ -4,6 +4,15 @@ from .forms import DocumentForm
 from text_analyzer.text_differ import get_all_text, get_match, get_minus_and_plus, get_json
 import json
 
+IMPORTANCE_COLOR = {
+    0: "black",
+    1: "#dbfa41",
+    2: "#face41",
+    3: "#faaa41",
+    4: "#fa7d41",
+    5: "#ff0000"
+}
+
 def index(request):
     context = {}
     return render(request, 'index.html', context)
@@ -24,13 +33,34 @@ def compare(request):
         difference, deleted_sentencies = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
         form = DocumentForm()
 
-        print(type(difference))
-        # for diff in difference['eq_and_match']:
-        #     if diff.get('score') is not None and diff['score'] == 0:
-        #         t2[diff['id']] = f'<span style="background-color: green; "> {t2[diff["id"]][0]}</span>'
+        diffs = []
+        added = []
+        changed = []
+        deleted = []
+
+        changed_entities = []
+
+        for diff in difference['eq_and_match']:
+            if diff.get('sim_score') is not None:
+                changed.append(diff)
+
+        for diff in sorted(difference['eq_and_match'], key=lambda x: x['importance'], reverse=True):
+            if diff.get('score') is not None and diff['score'] == 0:
+                added.append('<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[diff['importance']] + ';">&#8226;</span>   ' + f'[{diff["id"]}] ' + diff['markdown_ent'].replace('\\', '').replace('\n', ''))
+                t2[diff['id']] = ('<span style="background-color: green;">' + t2[diff['id']][0] + '</span>', t2[diff['id']][1])
+
+        for change in sorted(changed, key=lambda x: x['importance'], reverse=True):
+            diffs.append('<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown'].replace('\\', '').replace('\n', ''))
+            changed_entities.append([ '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown_ent_1'].replace('\\', '').replace('\n', ''),
+                                      '<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[change['importance']] + ';">&#8226;</span>   ' + f'[{change["id"]}] ' + change['markdown_ent_2'].replace('\\', '').replace('\n', '')])
+
+        for diff in sorted(difference['deleted'], key=lambda x: x['importance'], reverse=True):
+            deleted.append('<span style="font-size: 35px; color:' + IMPORTANCE_COLOR[diff['importance']] + ';">&#8226;</span>   ' + f'[{diff["id"]}] ' +diff['markdown_ent'].replace('\\', '').replace('\n', ''))
+            t1[diff['id']] = ('<span style="background-color: red;">' + t1[diff['id']][0] + '</span>', t1[diff['id']][1])
+
 
         for key, value in t1.items():
-            firstDoc += f'<span style="background-color: green; "> {value[0]}</span>'
+            firstDoc += value[0]
             if value[1]:
                 firstDoc += '\n'
 
@@ -40,7 +70,9 @@ def compare(request):
                 secondDoc += '\n'
 
     documents = Document.objects.all()
-    context = {'documents': documents, 'form': form, 'message': message, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc}
+    context = {'documents': documents, 'form': form, 'message': message, 'diffs': diffs, 'added': added, 'deleted': deleted,
+               'changed_entities': changed_entities, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc
+               }
 
     return render(request, 'start.html', context)
 
