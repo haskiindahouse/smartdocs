@@ -7,6 +7,10 @@ def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+def compare(request):
+    if request.method == 'POST':
+        print(request.POST.getlist('doc_check'))
+
 
 def start(request):
     message = 'Upload as many files as you want!'
@@ -18,7 +22,7 @@ def start(request):
             newdoc.save()
     if request.method == 'GET':
         form = DocumentForm()
-        message = "HELLO WORLD"
+
 
     documents = Document.objects.all()
 

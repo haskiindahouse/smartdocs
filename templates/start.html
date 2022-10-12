@@ -70,18 +70,7 @@
         </form>
       </div>
       <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
-      <div class="group">
-          <!-- List of uploaded documents -->
-            {% if documents %}
-                <ul style="list-style-type: none;">
-                {% for document in documents %}
-                    <li><input type="checkbox" style="float: left;" href="{{ document.docfile.url }}">{{ document.docfile.name }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>No documents.</p>
-            {% endif %}
-        </div>
+
       </div>
     <script>
     $(".group input").on("click", function() {
@@ -98,12 +87,24 @@
 
     });
     </script>
+
       <div data-aos="fade-up" data-aos-delay="600">
-        <form action="{% url 'start' %}" method="get" class="text-center text-lg-start">
-              <a href="#about" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
-                <span>Сравнить</span>
-                <i class="bi bi-arrow-right"></i>
-              </a>
+        <form action="{% url 'compare' %}" method="POST" class="text-center text-lg-start" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="group">
+          <!-- List of uploaded documents -->
+            {% if documents %}
+                <ul style="list-style-type: none;">
+                {% for document in documents %}
+                    <li><input type="checkbox" name="doc_check" value="{{ document.docfile.name }}"  style="float: left;" href="{{ document.docfile.url }}">{{ document.docfile.name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No documents.</p>
+            {% endif %}
+        </div>
+            <input type="submit" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center" value="Сравнить">
+
             </form>
             </div>
       </div>
