@@ -173,6 +173,9 @@ def get_tag_diff_score(doc,doc1,label_impotance={}):
    - по умолчанию коэффициенты для отсутсвующих тегов равны 0
   '''
 
+  if len(doc['ents'])+len(doc1['ents']) == 0:
+     return 1
+
   c=0
   words=[]
   for i in doc['ents']:
@@ -180,6 +183,7 @@ def get_tag_diff_score(doc,doc1,label_impotance={}):
       if i['word']==j['word']:
         words.append(i['word'])
         c+=1
+
 
   l1=[i for i in doc['ents'] if i['word'] not in words]
   l2=[i for i in doc1['ents'] if i['word'] not in words]
@@ -194,6 +198,7 @@ def get_tag_diff_score(doc,doc1,label_impotance={}):
         cos = dl.SequenceMatcher(lambda x: x == "",i['word'],j['word']).ratio()
         max_num = cos if cos>max_num else max_num
     numerator+= max_num * (0 if not (i['label'] in label_impotance.keys()) else label_impotance[i['label']])
+
 
     denumerator+=1
 
@@ -288,7 +293,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
             d_finaly['entities'] = tags_2['ents']
             d_finaly["markdown"] = get_diff_to_html(t1[d_changed[k]][0], v[0]) # разметка для двух текстов
             d_finaly["importance"] = 2 # 1-5
-            d_finaly["markdown_ent_1"] = displacy.render(tags_1, style="ent",manual=True) # разметка выделения сущностей 1 текст
+            d_finaly["markdown_ent_1"] = displacy.render(tags_1, style="ent",manual=True) # разметка выделения сущностей 1 текст необходимо удалить \
             d_finaly["markdown_ent_2"] = displacy.render(tags_2, style="ent",manual=True) # разметка выделения сущностей 2-й текст
 
 
@@ -297,6 +302,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
             d_finaly["n_matches"] = False
             d_finaly["entities"] = entity_extract(v[0])['ents']
             d_finaly["importance"] = 1
+            d_finaly["markdown_ent"] = displacy.render(entity_extract(v[0]), style="ent",manual=True)
 
         out.append(d_finaly)
 
@@ -307,14 +313,15 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
     del_lst = []
     for d in deleted:
         del_out = {}
+        ents = entity_extract(t1[d][0])
         del_out["id"] = d
         del_out["text"] = t1[d][0]
         del_out["num_paragraph"] = t1[d][1]
         del_out['score'] = 0
         del_out["n_matches"] = False
-        del_out["entities"] = entity_extract(t1[d][0])['ents']
+        del_out["entities"] = ents['ents']
         del_out["importance"] = 1
-
+        d_finaly["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
         del_lst.append(del_out)
 
     d_finaly['deleted'] = del_lst
