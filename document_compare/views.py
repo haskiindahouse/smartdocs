@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from .models import Document, Sentence
 from .forms import DocumentForm
 from text_analyzer.text_differ import get_all_text, get_match, get_minus_and_plus, get_json
-
+import json
 
 def index(request):
     context = {}
@@ -23,17 +23,24 @@ def compare(request):
         deleted, added = get_minus_and_plus(t1, t2, d_eq, d_changed)  # удаленные из 1 текста и добавленные во 2 текст
         difference, deleted_sentencies = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
         form = DocumentForm()
+
+        print(type(difference))
+        # for diff in difference['eq_and_match']:
+        #     if diff.get('score') is not None and diff['score'] == 0:
+        #         t2[diff['id']] = f'<span style="background-color: green; "> {t2[diff["id"]][0]}</span>'
+
         for key, value in t1.items():
-            firstDoc += value[0]
+            firstDoc += f'<span style="background-color: green; "> {value[0]}</span>'
             if value[1]:
                 firstDoc += '\n'
+
         for key, value in t2.items():
             secondDoc += value[0]
             if value[1]:
                 secondDoc += '\n'
 
     documents = Document.objects.all()
-    context = {'documents': documents, 'form': form, 'message': message, 'difference': difference, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc}
+    context = {'documents': documents, 'form': form, 'message': message, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc}
 
     return render(request, 'start.html', context)
 
