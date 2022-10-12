@@ -14,6 +14,8 @@ def compare(request):
     message = 'Upload as many files as you want!'
 
     deleted_sentencies = ""
+    firstDoc = ""
+    secondDoc = ""
     if request.method == 'POST':
         t1 = get_all_text(request.POST.getlist("doc_check")[0])  # текст 1 путь к файлу (doc,docx,rtf) STRING
         t2 = get_all_text(request.POST.getlist("doc_check")[1])  # текст 2 путь к файлу (doc,docx,rtf) STRINGv
@@ -21,9 +23,17 @@ def compare(request):
         deleted, added = get_minus_and_plus(t1, t2, d_eq, d_changed)  # удаленные из 1 текста и добавленные во 2 текст
         difference, deleted_sentencies = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
         form = DocumentForm()
+        for key, value in t1.items():
+            firstDoc += value[0]
+            if value[1]:
+                firstDoc += '\n'
+        for key, value in t2.items():
+            secondDoc += value[0]
+            if value[1]:
+                secondDoc += '\n'
 
     documents = Document.objects.all()
-    context = {'documents': documents, 'form': form, 'message': message, 'difference':difference, 'deleted_sentencies':deleted_sentencies}
+    context = {'documents': documents, 'form': form, 'message': message, 'difference': difference, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc}
 
     return render(request, 'start.html', context)
 
@@ -41,8 +51,6 @@ def start(request):
         form = DocumentForm()
 
     documents = Document.objects.all()
-    print(difference)
-
     # Сюда добавить сбор со сервера предложений по документу
-    context = {'documents': documents, 'form': form, 'message': message, 'difference': difference, 'deleted_sentencies':""}
+    context = {'documents': documents, 'form': form, 'message': message, 'difference': difference, 'deleted_sentencies':"", 'firstDoc': '', 'secondDoc': ''}
     return render(request, 'start.html', context)
