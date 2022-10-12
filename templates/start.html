@@ -3,36 +3,36 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>SmartDocs</title>
-  <meta content="" name="description">
+    <title>SmartDocs</title>
+    <meta content="" name="description">
 
-  <meta content="" name="keywords">
+    <meta content="" name="keywords">
 
-  <!-- Favicons -->
-  <link href="{% static 'img/favicon.png' %}" rel="icon">
-  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{%  static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{%  static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top">
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
       <a href="index.html" class="logo d-flex align-items-center">
@@ -48,33 +48,80 @@
       </nav><!-- .navbar -->
 
     </div>
-  </header><!-- End Header -->
+    </header><!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero" class="hero d-flex align-items-center">
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
 
     <div class="container">
       <div class="row">
+      <div class="col-lg-6 d-flex flex-column justify-content-center">
         <form action="{% url 'start' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <p>{{ form.non_field_errors }}</p>
             <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
             <p>
                 {{ form.docfile.errors }}
-                {{ form.docfile }}
+            <div class="btn btn-secondary align-items-center justify-content-center align-self-center" >
+            {{ form.docfile }}
+            </div>
             </p>
-            <p><input type="submit" value="Upload" /></p>
+            <p><input type="submit" class="btn-get-started align-items-center justify-content-center align-self-center" style="border: 0px;" value="Загрузить"></input></p>
         </form>
       </div>
+      <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+      <div class="group">
+          <!-- List of uploaded documents -->
+            {% if documents %}
+                <ul style="list-style-type: none;">
+                {% for document in documents %}
+                    <li><input type="checkbox" style="float: left;" href="{{ document.docfile.url }}">{{ document.docfile.name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No documents.</p>
+            {% endif %}
+        </div>
+      </div>
+    <script>
+    $(".group input").on("click", function() {
+
+        if($(".group input:checked").length >= 2) {
+
+            $(".group input:not(:checked)").attr("disabled", true);
+
+        } else {
+
+            $(".group input:disabled").attr("disabled", false);
+
+        }
+
+    });
+    </script>
+      <div data-aos="fade-up" data-aos-delay="600">
+        <form action="{% url 'start' %}" method="get" class="text-center text-lg-start">
+              <a href="#about" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                <span>Сравнить</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </form>
+            </div>
+      </div>
+  </div>
+{#    <script>#}
+{#        $('#show_spin').click(function(){#}
+{#        $('#spinner-border').toggle('slow');#}
+{#        });#}
+{#    </script>#}
+
+    </section><!-- End Hero -->
+
+    <main id="main">
+    <div class="container">
+{#    <div class="spinner-border" role="status">#}
+{#    </div>#}
     </div>
-
-  </section><!-- End Hero -->
-
-  <main id="main">
-
-
-  </main><!-- End #main -->
-
+    </main><!-- End #main -->
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="footer-top">
@@ -85,7 +132,7 @@
               <img src="{% static 'img/logo.png' %}" alt="">
               <span>SmartDocs</span>
             </a>
-            <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+            <p>Наконец-то выпустили первый сервис. Пока есть пару багов и много чего дорабатывать, но уже неплохо.</p>
             <div class="social-links mt-3">
               <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
               <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -95,19 +142,19 @@
           </div>
 
           <div class="col-lg-2 col-6 footer-links">
-            <h4>Useful Links</h4>
+            <h4>Полезные ссылки</h4>
             <ul>
-              <li><i class="bi bi-chevron-right"></i> <a  href="{%  url 'home' %}>Главная</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Главная</a></li>
               <li><i class="bi bi-chevron-right"></i> <a href="#">О нас</a></li>
             </ul>
           </div>
 
           <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-            <h4>Contact Us</h4>
+            <h4>Связаться</h4>
             <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
+              Programmistov 4<br>
+              Dubna, Moscowskaya oblast 654005<br>
+              Russia <br><br>
               <strong>Phone:</strong> +1 5589 55488 55<br>
               <strong>Email:</strong> info@example.com<br>
             </p>
@@ -120,10 +167,11 @@
 
     <div class="container">
       <div class="copyright">
-        &copy; Copyright <strong><span>SmartDocs</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>SmartDocs</span></strong>. Все права защищены
       </div>
     </div>
   </footer><!-- End Footer -->
+
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
