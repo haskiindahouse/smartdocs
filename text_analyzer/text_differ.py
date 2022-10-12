@@ -3,6 +3,7 @@ import pathlib
 import re
 import json
 import numpy as np
+from random import randint
 
 from razdel import tokenize, sentenize
 from natasha import *
@@ -292,7 +293,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
             d_finaly["n_matches"] = d_changed[k]
             d_finaly['entities'] = tags_2['ents']
             d_finaly["markdown"] = get_diff_to_html(t1[d_changed[k]][0], v[0]) # разметка для двух текстов
-            d_finaly["importance"] = 2 # 1-5
+            d_finaly["importance"] = randint(1, 5) # 1-5
             d_finaly["markdown_ent_1"] = displacy.render(tags_1, style="ent",manual=True) # разметка выделения сущностей 1 текст необходимо удалить \
             d_finaly["markdown_ent_2"] = displacy.render(tags_2, style="ent",manual=True) # разметка выделения сущностей 2-й текст
 
@@ -301,7 +302,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
             d_finaly["score"] = 0
             d_finaly["n_matches"] = False
             d_finaly["entities"] = entity_extract(v[0])['ents']
-            d_finaly["importance"] = 1
+            d_finaly["importance"] = randint(1, 5)
             d_finaly["markdown_ent"] = displacy.render(entity_extract(v[0]), style="ent",manual=True)
 
         out.append(d_finaly)
@@ -320,7 +321,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         del_out['score'] = 0
         del_out["n_matches"] = False
         del_out["entities"] = ents['ents']
-        del_out["importance"] = 1
+        del_out["importance"] = randint(1, 5)
         d_finaly["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
         del_lst.append(del_out)
 
