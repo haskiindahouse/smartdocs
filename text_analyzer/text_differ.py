@@ -13,6 +13,7 @@ from striprtf.striprtf import rtf_to_text
 # import aspose.words as aw
 import difflib as dl
 import diff_match_patch as dmp_module
+from spacy import displacy
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoModel
 from transformers import pipeline
@@ -268,25 +269,28 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
 
     for k,v in t2.items():
         d_finaly = {}
-        d_finaly["id"] = k #  номер предложения в тексте
+        d_finaly["id"] = k
         d_finaly["text"] = v[0]
-        d_finaly["num_paragraph"] = v[1] # номер абзаца !нужно для разделения!
+        d_finaly["num_paragraph"] = v[1]
 
         if d_eq.get(k) is not None:
             d_finaly["score"] = 1
             d_finaly["n_matches"] = d_eq[k]
-            d_finaly["importance"] = 0 # 1-5 Cтепень важности изменения (1 - незначительное, 5 - критичное) ПОКА НЕ РЕАЛИЗОВАНО
+            d_finaly["importance"] = 0
         elif d_changed.get(k) is not None:
             tags_1 = entity_extract(t1[d_changed[k]][0])
             tags_2 = entity_extract(v[0])
-            d_finaly["sim_score"] = round(get_sent_similarity(v[0],t1[d_changed[k]][0]).item(),3) # оценка похожести предложений BERT
-            d_finaly["entity_score"] = get_tag_diff_score(tags_1,tags_2,label_impotance={}) #  оценка похожести сущностей
+            d_finaly["sim_score"] = round(get_sent_similarity(v[0],t1[d_changed[k]][0]).item(),3)
+            d_finaly["entity_score"] = get_tag_diff_score(tags_1,tags_2,label_impotance={})
             d_finaly["check_test"] = t1[d_changed[k]]
             d_finaly["check_test_entities"] = tags_1['ents']
             d_finaly["n_matches"] = d_changed[k]
             d_finaly['entities'] = tags_2['ents']
             d_finaly["markdown"] = get_diff_to_html(t1[d_changed[k]][0], v[0]) # разметка для двух текстов
-            d_finaly["importance"] = 2 # 1-5 Cтепень важности изменения
+            d_finaly["importance"] = 2 # 1-5
+            d_finaly["markdown_ent_1"] = displacy.render(tags_1, style="ent",manual=True) # разметка выделения сущностей 1 текст
+            d_finaly["markdown_ent_2"] = displacy.render(tags_2, style="ent",manual=True) # разметка выделения сущностей 2-й текст
+
 
         else: # добавленные предложения
             d_finaly["score"] = 0
@@ -299,9 +303,10 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
     d_finaly = {}
     d_finaly['eq_and_match'] = out
 
-    del_out = {}
+
     del_lst = []
-    for d in deleted: # удаленные предложения из 1 текста
+    for d in deleted:
+        del_out = {}
         del_out["id"] = d
         del_out["text"] = t1[d][0]
         del_out["num_paragraph"] = t1[d][1]
