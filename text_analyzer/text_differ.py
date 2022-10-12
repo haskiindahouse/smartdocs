@@ -14,7 +14,7 @@ from striprtf.striprtf import rtf_to_text
 import difflib as dl
 import diff_match_patch as dmp_module
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification,AutoModel
+from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoModel
 from transformers import pipeline
 from sentence_transformers import SentenceTransformer, util
 import torch

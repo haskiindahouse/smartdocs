@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from .models import Document, Sentence
 from .forms import DocumentForm
-
+from text_analyzer.text_differ import get_all_text, get_match, get_minus_and_plus, get_json
 
 def index(request):
     context = {}
@@ -9,7 +9,11 @@ def index(request):
 
 def compare(request):
     if request.method == 'POST':
-        print(request.POST.getlist('doc_check'))
+        t1 = get_all_text(request.POST.getlist("doc_check")[0])  # текст 1 путь к файлу (doc,docx,rtf) STRING
+        t2 = get_all_text(request.POST.getlist("doc_check")[1])  # текст 2 путь к файлу (doc,docx,rtf) STRINGv
+        d_eq, d_changed = get_match(t1, t2)  # словарь полных совпадений и изменений {text1_id: text2_id}
+        deleted, added = get_minus_and_plus(t1, t2, d_eq, d_changed)  # удаленные из 1 текста и добавленные во 2 текст
+        get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
 
 
 def start(request):
