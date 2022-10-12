@@ -142,7 +142,7 @@ def get_diff_to_html(sen1, sen2):
     создание HTML размметки по предложениям
     на основе внесенных изменений
     '''
-    dmp = diff_match_patch()
+    dmp = dmp_module.diff_match_patch()
     diff = dmp.diff_main(sen1, sen2)
     dmp.diff_cleanupSemantic(diff)
 
@@ -323,8 +323,8 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
 
 
 if __name__ =='__main__':
-    t1 = get_all_text(doc1_path) # текст 1 путь к файлу (doc,docx,rtf) STRING
-    t2 = get_all_text(doc2_path) # текст 2 путь к файлу (doc,docx,rtf) STRINGv
+    t1 = get_all_text("v1.docx") # текст 1 путь к файлу (doc,docx,rtf) STRING
+    t2 = get_all_text("v2.docx") # текст 2 путь к файлу (doc,docx,rtf) STRINGv
     d_eq, d_changed = get_match(t1,t2) # словарь полных совпадений и изменений {text1_id: text2_id}
     deleted, added = get_minus_and_plus(t1,t2,d_eq,d_changed) # удаленные из 1 текста и добавленные во 2 текст
     get_json(t1,t2,d_eq,d_changed,deleted) # формирование файла разметки
