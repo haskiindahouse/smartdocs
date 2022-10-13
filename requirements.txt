@@ -1,0 +1,7 @@
+python-docx
+sentence-transformers
+razdel
+natasha
+striprtf
+diff_match_patch
+spacy

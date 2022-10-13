@@ -1,61 +1,292 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Сравнение документов</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  
-  <link rel="stylesheet" href="../static/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <title>SmartDocs</title>
+  <meta content="" name="description">
 
-  <link rel="stylesheet" href="../static/css/demo.css">
-  <script src="https://kit.fontawesome.com/a3229bc6db.js" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="../static/js/modernizr.custom.86080.js"></script>
+  <meta content="" name="keywords">
 
-	</head>
-	<body>
-        <div id="../static/js/particles.js"></div>
-			<div class="container-fluid justify-content-center align-items-center">
-				<div class="d-flex justify-content-between cb-slideshow-text-container ">
-                    <div class="documents_container col-md-5">
-                        
-                            <div><i class="fa-solid fa-file"></i>Название документа</div>
-                            <div><i class="fa-solid fa-file"></i>Название документа</div>
-                            <div><i class="fa-solid fa-file"></i>Название документа</div>
-                            <div><i class="fa-solid fa-file"></i>Название документа</div>
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
-                    </div>
-					<div class= "tm-content col-md-7 col-xl-6 col-sm-8 col-xs-8 section">
-                    
-					<header class="mb-5"><h1>Сравнение документов</h1></header>
-					<P class="mb-5">Данный сервис позволит вам произвести сравнение двух загруженных документов! Он покажет вам статистику изменений! Подсветит изменения по важности!</P>
-                    <form action="#" method="get" class="subscribe-form">
-            
-                    <form action="./" method="post" enctype="multipart/form-data"> 
-                        <label for="customFile">Выберите файл</label>
-                        <input type="submit" id="customFile" class="btn btn-secondary" value="Загрузить"/>
-                    </form> 				
-                        <div> 
-                            <p>errors</p>
-                    <p>label help text</p>
-                        </div>
-                    </form>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-					<div class="tm-social-icons-container text-xs-center">
-	                    <a href="#" class="tm-social-link"><i class="fa fa-google-plus"></i></a>
-	                    <a href="#" class="tm-social-link"><i class="fa fa-github"></i></a>
-	                </div>
-					</div>
-				</div>
-				<div class="footer-link">
-					<p>Copyright © 2022 Выйти из дампа
-				</div>
-			</div>
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{%  static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
-	</body>
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
 
-	<script type="text/javascript" src="../static/js/particles.js"></script>
-	<script type="text/javascript" src="../static/js/app.js"></script>
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="{%  static 'img/logo.png' %}" alt="">
+        <span>SmartDocs</span>
+      </a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Главная</a></li>
+          <li><a class="nav-link scrollto" href="#about">О продукте</a></li>
+          <li><a class="nav-link scrollto" href="#team">Команда</a></li>
+          <li><a class="getstarted scrollto" href="{%  url "start" %}">Начать использовать</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="hero d-flex align-items-center">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
+          <h1 data-aos="fade-up">Сделайте ваши документы умнее и безопаснее</h1>
+          <h2 data-aos="fade-up" data-aos-delay="400">Наша команда предоставляет сервис контроля версий для документов с использованием тяжелых нейронных сетей</h2>
+          <div data-aos="fade-up" data-aos-delay="600">
+            <div class="text-center text-lg-start">
+              <a href="#about" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                <span>Узнать подробнее</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+          <img src="{% static 'img/hero-img.png' %}" class="img-fluid" alt="">
+        </div>
+      </div>
+    </div>
+
+  </section><!-- End Hero -->
+
+  <main id="main">
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+
+      <div class="container" data-aos="fade-up">
+        <div class="row gx-0">
+
+          <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <h3>Особенности решения</h3>
+              <h2>СРОЧНО НАПИСАТЬ НА ГЛАВНОЙ</h2>
+              <p>
+                Sentence-BERT
+                xlm-roberta
+                BERT-LaBSE_ner_nerel
+              </p>
+              <div class="text-center text-lg-start">
+                  <a class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center" href="{%  url "start" %}"><span>Начать использовать</span>
+                  <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
+            <img src="{%  static 'img/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+
+        </div>
+      </div>
+
+    </section><!-- End About Section -->
+
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team">
+
+      <div class="container" data-aos="fade-up">
+
+        <header class="section-header">
+          <h2>Команда</h2>
+          <p>Наша команда, которая улучшает продукт каждый день</p>
+        </header>
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+            <div class="member">
+              <div class="member-img">
+                <img src="{% static 'img/team/team-1.jpg' %}" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Мурунов Михаил</h4>
+                <span>Технический руководитель</span>
+                <p>Лучше уснуть рано и встать рано, чем просидеть до четырех утра так ничего и не сделав.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+            <div class="member">
+              <div class="member-img">
+                <img src="{% static 'img/team/team-2.jfif' %}" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Борисов Максим</h4>
+                <span>Специалист по анализу данных</span>
+                <p>В теории, теория и практика неразделимы. На практике это не так.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+            <div class="member">
+              <div class="member-img">
+                <img src="{% static 'img/team/team-3.jpg'%}" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Глуховцев Павел</h4>
+                <span>Программист-математик</span>
+                <p>Программирование — это как бить себя по лицу, рано или поздно ваш нос будет кровоточить.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="400">
+            <div class="member">
+                <div class="member-img">
+                <img src="{% static 'img/team/team-4.jpg' %}" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Гурков Денис</h4>
+                <span>Backend-разработчик</span>
+                <p>Многие из вас знакомы с достоинствами программиста. Их всего три, и разумеется это: лень, нетерпеливость и гордыня.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- End Team Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+
+    <div class="footer-newsletter">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12 text-center">
+            <h4>Подпишитесь на уведомления</h4>
+            <p>Все новинки функционала будут приходит вам на почту</p>
+          </div>
+          <div class="col-lg-6">
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Подписаться">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-5 col-md-12 footer-info">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <img src="{% static 'img/logo.png' %}" alt="">
+              <span>SmartDocs</span>
+            </a>
+            <p>Наконец-то выпустили первый сервис. Пока есть пару багов и много чего дорабатывать, но уже неплохо.</p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-6 footer-links">
+            <h4>Полезные ссылки</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Главная</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">О нас</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+            <h4>Связаться</h4>
+            <p>
+              Programmistov 4<br>
+              Dubna, Moscowskaya oblast 654005<br>
+              Russia <br><br>
+              <strong>Phone:</strong> +1 5589 55488 55<br>
+              <strong>Email:</strong> info@example.com<br>
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>SmartDocs</span></strong>. Все права защищены
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js'%}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
 </html>

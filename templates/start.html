@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>SmartDocs</title>
+    <meta content="" name="description">
+
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{%  static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="{%  static 'img/logo.png' %}" alt="">
+        <span>SmartDocs</span>
+      </a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="{%  url "home" %}">Главная</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+    </header><!-- End Header -->
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+
+    <div class="container">
+      <div class="row">
+      <div class="col-lg-6 d-flex flex-column justify-content-center">
+        <form action="{% url 'start' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+            <p>
+                {{ form.docfile.errors }}
+            <div class="btn btn-secondary align-items-center justify-content-center align-self-center" >
+            {{ form.docfile }}
+            </div>
+            </p>
+            <p><input type="submit" class="btn-get-started align-items-center justify-content-center align-self-center" style="border: 0px;" value="Загрузить"></input></p>
+        </form>
+      </div>
+      <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+
+    <script>
+    $(".group input").on("click", function() {
+
+        if($(".group input:checked").length >= 2) {
+
+            $(".group input:not(:checked)").attr("disabled", true);
+
+        } else {
+
+            $(".group input:disabled").attr("disabled", false);
+
+        }
+
+    });
+    </script>
+      <div class="col-lg-6 d-flex flex-column justify-content-center">
+      <div data-aos="fade-up" data-aos-delay="600">
+        <form action="{% url 'compare' %}" method="POST" class="text-center text-lg-start" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="group">
+          <!-- List of uploaded documents -->
+            {% if documents %}
+                <ul style="list-style-type: none;">
+                {% for document in documents %}
+                    <li><input type="checkbox" name="doc_check" value="{{ document.docfile.name }}"  style="float: left;" href="{{ document.docfile.url }}">{{ document.docfile.name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>Нет в документе</p>
+            {% endif %}
+        </div>
+            <input type="submit" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center" value="Сравнить">
+            </form>
+    </div>
+      </div>
+    </div>
+  </div>
+{#    <script>#}
+{#        $('#show_spin').click(function(){#}
+{#        $('#spinner-border').toggle('slow');#}
+{#        });#}
+{#    </script>#}
+
+    </section>
+
+
+    <!-- ======= Team Section ======= -->
+    <section id="test" class="test">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h2>Аналитика</h2>
+          <p>Сводная информация</p>
+        </header>
+
+        <div class="row gy-3">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="100">
+              <p>
+              Предложений в 1 тексте: {{ analytics.num_sentence_t1 | safe}} <br>
+              Предложений во 2 тексте: {{ analytics.num_sentence_t2 | safe}} <br>
+                  <br>
+              Количество одинаковых: {{ analytics.num_equal | safe}} <br>
+              Количество добавленных: {{ analytics.num_added }}<br>
+              Количество удаленных: {{ analytics.num_deleted }} <br>
+                  <br>
+              Доля измененных: {{ analytics.num_changed }} <br>
+              Доля добавленных: {{ analytics.help1 }}<br>
+              Доля удаленных: {{ analytics.help2 }}<br>
+              </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="200">
+              <div>
+                    <p class="statistics-title">Средняя мера похожести изменений</p>
+                    <h3 class="rate-percentage" style="color: green;">{{ analytics.median_sim_score  | safe}}%</h3>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="300">
+              <p>
+                  Средняя оценка важности измененных предложений: <a style="color: green;"> {{ analytics.mean_matched_importance | safe }}</a><br>
+                  <br>
+              Средняя оценка важности удаленных предложений: <a style="color: red;">{{analytics.mean_del_importance | safe }}</a><br>
+                  <br>
+              Средняя оценка важности добавленных предложений: <a style="color: green;">{{analytics.mean_added_importance| safe }}</a> <br>
+              </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- End Team Section -->
+    <section id="team" class="team">
+      <div class="container" data-aos="fade-up">
+           <div class="row">
+
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
+            <label for="exampleFormControlTextarea1">Исходный</label>
+        <div contenteditable="true" class="form-control"  style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">{{ firstDoc|safe }}</div>
+    </div>
+       <div class="col-lg-6 d-flex flex-column justify-content-center">
+      <label for="exampleFormControlTextarea1">Новый</label>
+    <div contenteditable="true" class="form-control" style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">{{ secondDoc|safe }}</div>
+    </div>
+      </div>
+      </div>
+
+    </section>
+
+        <section id="team" class="team">
+      <div class="container" data-aos="fade-up">
+           <div class="row">
+
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
+            <label for="exampleFormControlTextarea1">Результат сравнения</label>
+        <div contenteditable="true" class="form-control"  style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">
+            {% if diffs %}
+            <center><h1>Изменения:</h1></center>
+                {% for diff in diffs %}
+                    {{ diff|safe }} <br/> <br/>
+                {% endfor %}
+            {% endif %}
+            {% if added %}
+            <center><h1>Добавлено:</h1></center>
+                {% for addition in added %}
+                {{ addition | safe }} <br/> <br/>
+
+                {% endfor %}
+            {% endif %}
+
+            {% if deleted %}
+             <center><h1>Удалено:</h1></center>
+                {% for deletion in deleted %}
+                {{ deletion | safe }}<br/> <br/>
+
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+       <div class="col-lg-6 d-flex flex-column justify-content-center">
+      <label for="exampleFormControlTextarea1">Изменения:</label>
+    <div contenteditable="true" class="form-control" style="height: 800px; overflow: auto;" id="exampleFormControlTextarea1" rows="3">
+        {% if changed_entities %}
+            {% for en in changed_entities %}
+                {% for e in en %}
+                    {{ e|safe }}<br/>
+                    {% endfor %}
+                <br/>
+                <br/>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+    </div>
+      </div>
+      </div>
+
+    </section>
+
+
+    <main id="main">
+    <div class="container">
+{#    <div class="spinner-border" role="status">#}
+{#    </div>#}
+    </div>
+    </main><!-- End #main -->
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-5 col-md-12 footer-info">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <img src="{% static 'img/logo.png' %}" alt="">
+              <span>SmartDocs</span>
+            </a>
+            <p>Наконец-то выпустили первый сервис. Пока есть пару багов и много чего дорабатывать, но уже неплохо.</p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-6 footer-links">
+            <h4>Полезные ссылки</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Главная</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">О нас</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+            <h4>Связаться</h4>
+            <p>
+              Programmistov 4<br>
+              Dubna, Moscowskaya oblast 654005<br>
+              Russia <br><br>
+              <strong>Phone:</strong> +1 5589 55488 55<br>
+              <strong>Email:</strong> info@example.com<br>
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>SmartDocs</span></strong>. Все права защищены
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js'%}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>
