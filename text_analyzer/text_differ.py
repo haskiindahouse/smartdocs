@@ -432,6 +432,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         'num_equal': num_eq, # кол-во одинаковых предложений
         'num_added': num_added, # кол-во добавленных предложений
         'num_deleted': len(del_importance), # кол-во удаленных предложений
+        'num_changed': len(matched_importance),
         'mean_sim_score': sum(matched_sim_score)/len(matched_sim_score), # средний симиларити скор
         'median_sim_score': statistics.median(matched_sim_score), # медиана симиларити скор
         'mean_ent_score': sum(matched_ent_score)/len(matched_ent_score), # средний скор похожести сущностей
