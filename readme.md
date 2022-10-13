@@ -3,7 +3,9 @@
 The service allows you to semantically compare two versions of a document.
 <h2>How it work</h2>
 <h2>Installation :wrench:</h2>
-`pip install -r requirements.txt`<br>
+
+`pip install -r requirements.txt`
+<br>
 `python -m spacy download ru_core_news_md`<br>
 `python manage.py migrate --run-syncdb`<br>
 `python manage.py makemigration`<br>
