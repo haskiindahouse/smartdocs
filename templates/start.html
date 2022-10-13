@@ -71,7 +71,6 @@
       </div>
       <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
 
-      </div>
     <script>
     $(".group input").on("click", function() {
 
@@ -87,7 +86,7 @@
 
     });
     </script>
-
+      <div class="col-lg-6 d-flex flex-column justify-content-center">
       <div data-aos="fade-up" data-aos-delay="600">
         <form action="{% url 'compare' %}" method="POST" class="text-center text-lg-start" enctype="multipart/form-data">
             {% csrf_token %}
@@ -106,6 +105,7 @@
             <input type="submit" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center" value="Сравнить">
             </form>
     </div>
+      </div>
     </div>
   </div>
 {#    <script>#}
