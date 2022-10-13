@@ -25,6 +25,7 @@ def compare(request):
     deleted_sentencies = ""
     firstDoc = ""
     secondDoc = ""
+    analytics = ""
     if request.method == 'POST':
         t1 = get_all_text(request.POST.getlist("doc_check")[0])  # текст 1 путь к файлу (doc,docx,rtf) STRING
         t2 = get_all_text(request.POST.getlist("doc_check")[1])  # текст 2 путь к файлу (doc,docx,rtf) STRINGv
@@ -33,6 +34,13 @@ def compare(request):
         difference, deleted_sentencies, analytics = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
         form = DocumentForm()
 
+        analytics['num_changed'] = round(analytics['num_changed'] / analytics['num_sentence_t2'], 2)
+        analytics['help1'] = round(analytics['num_added'] / analytics['num_sentence_t2'], 2)
+        analytics['help2'] = round(analytics['num_deleted'] / analytics['num_sentence_t1'], 2)
+        analytics['median_sim_score'] = round(analytics['median_sim_score'] * 100, 2)
+        analytics['mean_matched_importance'] = round(analytics['mean_matched_importance'], 2)
+        analytics['mean_del_importance'] = round(analytics['mean_del_importance'], 2)
+        analytics['mean_added_importance'] = round(analytics['mean_added_importance'], 2)
         diffs = []
         added = []
         changed = []
@@ -71,7 +79,8 @@ def compare(request):
 
     documents = Document.objects.all()
     context = {'documents': documents, 'form': form, 'message': message, 'diffs': diffs, 'added': added, 'deleted': deleted,
-               'changed_entities': changed_entities, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc
+               'changed_entities': changed_entities, 'deleted_sentencies':deleted_sentencies, 'firstDoc': firstDoc, 'secondDoc': secondDoc,
+               'analytics': analytics
                }
 
     return render(request, 'start.html', context)

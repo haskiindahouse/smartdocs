@@ -116,6 +116,54 @@
 
     </section>
 
+
+    <!-- ======= Team Section ======= -->
+    <section id="test" class="test">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h2>Аналитика</h2>
+          <p>Сводная информация</p>
+        </header>
+
+        <div class="row gy-3">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="100">
+              <p>
+              Предложений в 1 тексте: {{ analytics.num_sentence_t1 | safe}} <br>
+              Предложений во 2 тексте: {{ analytics.num_sentence_t2 | safe}} <br>
+                  <br>
+              Количество одинаковых: {{ analytics.num_equal | safe}} <br>
+              Количество добавленных: {{ analytics.num_added }}<br>
+              Количество удаленных: {{ analytics.num_deleted }} <br>
+                  <br>
+              Доля измененных: {{ analytics.num_changed }} <br>
+              Доля добавленных: {{ analytics.help1 }}<br>
+              Доля удаленных: {{ analytics.help2 }}<br>
+              </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="200">
+              <div>
+                    <p class="statistics-title">Средняя мера похожести изменений</p>
+                    <h3 class="rate-percentage" style="color: green;">{{ analytics.median_sim_score  | safe}}%</h3>
+              </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch" style="width: 33%;" data-aos="fade-up" data-aos-delay="300">
+              <p>
+                  Средняя оценка важности измененных предложений: <a style="color: green;"> {{ analytics.mean_matched_importance | safe }}</a><br>
+                  <br>
+              Средняя оценка важности удаленных предложений: <a style="color: red;">{{analytics.mean_del_importance | safe }}</a><br>
+                  <br>
+              Средняя оценка важности добавленных предложений: <a style="color: green;">{{analytics.mean_added_importance| safe }}</a> <br>
+              </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- End Team Section -->
     <section id="team" class="team">
       <div class="container" data-aos="fade-up">
            <div class="row">
