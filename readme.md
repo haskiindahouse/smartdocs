@@ -1,4 +1,4 @@
-<h1>SmartDoc :boom:</h1>
+<h1>SmartDocs :boom:</h1>
 <h2>About</h3>
 The service allows you to semantically compare two versions of a document.
 <h2>How it work</h2>
