@@ -396,7 +396,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         del_out["n_matches"] = False
         del_out["entities"] = ents['ents']
         del_out["importance"] = calculate_importance_alone(score_alone)
-        d_finaly["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
+        del_out["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
         del_lst.append(del_out)
 
     d_finaly['deleted'] = del_lst
@@ -451,7 +451,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
 
     # with open('markdown.json', 'w') as outfile:
     #     json.dump(d_finaly, outfile, ensure_ascii=False)
-    #
+
     # with open('text1.json', 'w') as outfile:
     #     json.dump(t1, outfile, ensure_ascii=False)
 
