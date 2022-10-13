@@ -458,7 +458,7 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
     # with open('analytics.json', 'w') as outfile:
     #     json.dump(analytics, outfile, ensure_ascii=False)
 
-    return d_finaly, t1, analytics
+    return d_finaly, t1, analytics # раньше возвращалось только 2 аргумента
 
 
 if __name__ =='__main__':
