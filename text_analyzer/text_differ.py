@@ -4,6 +4,9 @@ import re
 import json
 import numpy as np
 from random import randint
+from collections import Counter
+import math
+import statistics
 
 from razdel import tokenize, sentenize
 from natasha import *
@@ -14,6 +17,7 @@ from striprtf.striprtf import rtf_to_text
 # import aspose.words as aw
 import difflib as dl
 import diff_match_patch as dmp_module
+import spacy
 from spacy import displacy
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoModel
@@ -26,12 +30,24 @@ tokenizer = AutoTokenizer.from_pretrained("surdan/LaBSE_ner_nerel")
 model = AutoModelForTokenClassification.from_pretrained("surdan/LaBSE_ner_nerel")
 nlp = pipeline('ner', model=model, tokenizer=tokenizer, aggregation_strategy="first")
 model_sim = SentenceTransformer('uaritm/multilingual_en_ru_uk')
+nlp_spacy = spacy.load('ru_core_news_md')
 
+# настройка весов сущностей
 label_impotance={
     "MONEY" : 1,
     "ORGANIZATION" : 0.5,
     "PERSON" : 0.5,
     "FACILITY" : 0.5
+}
+
+label_impotance_alone={
+    "MONEY" : 5,
+    "ORGANIZATION" : 3,
+    "PERSON" : 4,
+    "FACILITY" : 2,
+    "DATE" : 5,
+    "PRODUCT": 4,
+    "CITY": 3
 }
 
 def get_all_text(filename: str) -> dict:
@@ -246,6 +262,34 @@ def get_ner_tokens(text, nlp, conf_for_bert=0.8, label_drop_list=[]):
   return ans
 
 
+def calculate_importance(sim_score):
+    if sim_score < 0.65:
+        return 5
+    elif sim_score < 0.70:
+        return 4
+    elif sim_score < 0.82:
+        return 3
+    elif sim_score <= 0.94:
+        return 2
+    elif sim_score <= 1:
+        return 1
+    return 1
+
+
+def calculate_importance_alone(score):
+    if score < 0.1:
+        return 1
+    elif score < 0.2:
+        return 2
+    elif score < 0.35:
+        return 3
+    elif score <= 0.42:
+        return 4
+    elif score <= 2:
+        return 5
+    return 1
+
+
 def entity_extract(sentanse: str) ->dict:
     '''
     выделение сущностей из предложения
@@ -263,6 +307,34 @@ def entity_extract(sentanse: str) ->dict:
     doc=get_ner_tokens(sentanse,nlp,conf_for_bert=0.7,label_drop_list=[])
 
     return doc
+
+
+def count_part_of_speech(sen):
+    '''
+    принимает на вход предложение (строку)
+    вычисляет концентрацию ADJ, VERB
+    '''
+    imp_part_of_speech = ['ADJ','VERB', 'PROPN']
+    document = nlp_spacy(sen)
+    count = Counter([el.pos_ for el in document])
+    return sum([count.get(el,0) for el in imp_part_of_speech])/len(document.text.split())
+
+
+def get_tag_score(doc,label_impotance={}):
+  '''
+  Принимает словарь из get_ner_tokens()
+  Возращает оценку, основанную на количестве и важности токенов
+  Можно передать словарь весов токенов для каждого токена
+  '''
+  a=0
+
+  for i in label_impotance_alone.keys():
+    a+=label_impotance[i]
+  x=0
+  for i in doc['ents']:
+    x+= (0 if not (i['label'] in label_impotance.keys()) else label_impotance[i['label']])
+
+  return math.exp(-x/a)
 
 
 def get_json(t1,t2,d_eq,d_changed,deleted):
@@ -286,23 +358,25 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         elif d_changed.get(k) is not None:
             tags_1 = entity_extract(t1[d_changed[k]][0])
             tags_2 = entity_extract(v[0])
-            d_finaly["sim_score"] = round(get_sent_similarity(v[0],t1[d_changed[k]][0]).item(),3)
+
+            sim_score = round(get_sent_similarity(v[0],t1[d_changed[k]][0]).item(),3)
+            d_finaly["sim_score"] = sim_score
             d_finaly["entity_score"] = get_tag_diff_score(tags_1,tags_2,label_impotance={})
             d_finaly["check_test"] = t1[d_changed[k]]
             d_finaly["check_test_entities"] = tags_1['ents']
             d_finaly["n_matches"] = d_changed[k]
             d_finaly['entities'] = tags_2['ents']
             d_finaly["markdown"] = get_diff_to_html(t1[d_changed[k]][0], v[0]) # разметка для двух текстов
-            d_finaly["importance"] = randint(1, 5) # 1-5
+            d_finaly["importance"] = calculate_importance(sim_score) # 1-5
             d_finaly["markdown_ent_1"] = displacy.render(tags_1, style="ent",manual=True) # разметка выделения сущностей 1 текст необходимо удалить \
             d_finaly["markdown_ent_2"] = displacy.render(tags_2, style="ent",manual=True) # разметка выделения сущностей 2-й текст
 
-
         else: # добавленные предложения
+            score_alone = 1 - get_tag_score(entity_extract(v[0]),label_impotance_alone) + count_part_of_speech(v[0])
             d_finaly["score"] = 0
             d_finaly["n_matches"] = False
             d_finaly["entities"] = entity_extract(v[0])['ents']
-            d_finaly["importance"] = randint(1, 5)
+            d_finaly["importance"] = calculate_importance_alone(score_alone)
             d_finaly["markdown_ent"] = displacy.render(entity_extract(v[0]), style="ent",manual=True)
 
         out.append(d_finaly)
@@ -310,10 +384,10 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
     d_finaly = {}
     d_finaly['eq_and_match'] = out
 
-
     del_lst = []
     for d in deleted:
         del_out = {}
+        score_alone = 1 - get_tag_score(entity_extract(t1[d][0]),label_impotance_alone) + count_part_of_speech(t1[d][0])
         ents = entity_extract(t1[d][0])
         del_out["id"] = d
         del_out["text"] = t1[d][0]
@@ -321,22 +395,75 @@ def get_json(t1,t2,d_eq,d_changed,deleted):
         del_out['score'] = 0
         del_out["n_matches"] = False
         del_out["entities"] = ents['ents']
-        del_out["importance"] = randint(1, 5)
-        del_out["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
+        del_out["importance"] = calculate_importance_alone(score_alone)
+        d_finaly["markdown_ent"] = displacy.render(ents, style="ent",manual=True)
         del_lst.append(del_out)
 
     d_finaly['deleted'] = del_lst
+
+    len_t2 = 0
+    len_t1 = 0
+    num_eq = 0
+    num_added =0
+    matched_sim_score = []
+    matched_ent_score = []
+    added_importance = []
+    del_importance = []
+    matched_importance = []
+
+    for el in d_finaly['eq_and_match']:
+        num_eq+=el.get('score',0)
+        if el.get('sim_score') is not None:
+            matched_sim_score.append(el.get('sim_score'))
+            matched_ent_score.append(el.get('entity_score'))
+            matched_importance.append(el.get('importance'))
+        elif el.get('score') is not None and el.get('score')==0:
+            num_added+=1
+            added_importance.append(el.get('importance'))
+
+    for el in d_finaly['deleted']:
+        del_importance.append(el.get('importance'))
+
+
+
+    analytics = {
+        'num_sentence_t1': len(t1), # предложений в 1 тексте
+        'num_sentence_t2': num_eq+len(matched_sim_score)+num_added, # предложений в 2 тексте
+        'num_equal': num_eq, # кол-во одинаковых предложений
+        'num_added': num_added, # кол-во добавленных предложений
+        'num_deleted': len(del_importance), # кол-во удаленных предложений
+        'mean_sim_score': sum(matched_sim_score)/len(matched_sim_score), # средний симиларити скор
+        'median_sim_score': statistics.median(matched_sim_score), # медиана симиларити скор
+        'mean_ent_score': sum(matched_ent_score)/len(matched_ent_score), # средний скор похожести сущностей
+        'median_ent_score': statistics.median(matched_ent_score),# медианный скор похожести сущностей
+
+        'mean_matched_importance': sum(matched_importance)/len(matched_importance), # средний важность изменений в соответствующих предложениях
+        'median_ent_score': statistics.median(matched_importance), # медианный важность изменений в соответствующих предложениях
+
+        'mean_del_importance': sum(del_importance)/len(del_importance), # средняя важность удаленных предложений
+        'median_del_importance': statistics.median(del_importance), # медианная важность удаленных предложений
+
+        'mean_added_importance': sum(added_importance)/len(added_importance), # средняя важность у удаленных предложений
+        'median_added_importance': statistics.median(added_importance), # медианная важность у удаленных предложений
+
+
+        }
+
     # with open('markdown.json', 'w') as outfile:
     #     json.dump(d_finaly, outfile, ensure_ascii=False)
     #
     # with open('text1.json', 'w') as outfile:
     #     json.dump(t1, outfile, ensure_ascii=False)
-    return d_finaly, t1
+
+    # with open('analytics.json', 'w') as outfile:
+    #     json.dump(analytics, outfile, ensure_ascii=False)
+
+    return d_finaly, t1, analytics
 
 
 if __name__ =='__main__':
-    t1 = get_all_text("v1.docx") # текст 1 путь к файлу (doc,docx,rtf) STRING
-    t2 = get_all_text("v2.docx") # текст 2 путь к файлу (doc,docx,rtf) STRINGv
+    t1 = get_all_text("11.docx") # текст 1 путь к файлу (doc,docx,rtf) STRING
+    t2 = get_all_text("22.docx") # текст 2 путь к файлу (doc,docx,rtf) STRINGv
     d_eq, d_changed = get_match(t1,t2) # словарь полных совпадений и изменений {text1_id: text2_id}
     deleted, added = get_minus_and_plus(t1,t2,d_eq,d_changed) # удаленные из 1 текста и добавленные во 2 текст
     get_json(t1,t2,d_eq,d_changed,deleted) # формирование файла разметки
