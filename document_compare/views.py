@@ -30,7 +30,7 @@ def compare(request):
         t2 = get_all_text(request.POST.getlist("doc_check")[1])  # текст 2 путь к файлу (doc,docx,rtf) STRINGv
         d_eq, d_changed = get_match(t1, t2)  # словарь полных совпадений и изменений {text1_id: text2_id}
         deleted, added = get_minus_and_plus(t1, t2, d_eq, d_changed)  # удаленные из 1 текста и добавленные во 2 текст
-        difference, deleted_sentencies = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
+        difference, deleted_sentencies, analytics = get_json(t1, t2, d_eq, d_changed, deleted)  # формирование файла разметки
         form = DocumentForm()
 
         diffs = []
