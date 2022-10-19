@@ -2,7 +2,7 @@
 <h2>About</h3>
 The service allows you to semantically compare two versions of a document.
 <h2>How it work</h2>
-![](images/pipeline.png)
+![pipeline](images/pipeline.png)
 <h2>Installation :wrench:</h2>
 
 `pip install -r requirements.txt`
