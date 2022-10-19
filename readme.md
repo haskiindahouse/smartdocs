@@ -3,7 +3,7 @@
 The service allows you to semantically compare two versions of a document.
 <h2>How it work</h2>
 ![pipeline](/images/pipeline.png)
-<img src="/mages/pipeline.png" alt="pipeline">
+<img src="/images/pipeline.png" alt="pipeline">
 <h2>Installation :wrench:</h2>
 
 `pip install -r requirements.txt`
