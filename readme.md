@@ -2,7 +2,7 @@
 <h2>About</h3>
 The service allows you to semantically compare two versions of a document.
 <h2>How it work</h2>
-![pipeline](images/pipeline.png)
+![pipeline](https://github.com/haskiindahouse/document_semantic_comparsion_case_2/blob/ec7ae1fe285b2937ec6168df6b833e52c53545ab/images/pipeline.png)
 <h2>Installation :wrench:</h2>
 
 `pip install -r requirements.txt`
