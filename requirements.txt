@@ -5,4 +5,8 @@ natasha
 striprtf
 diff_match_patch
 spacy
-django
+gunicorn==20.1.0
+Django==4.0.4
+psycopg2==2.8.6
+sqlparse==0.4.2
+asgiref==3.5.2
